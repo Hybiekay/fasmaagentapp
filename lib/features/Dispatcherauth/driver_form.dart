@@ -1,0 +1,259 @@
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import '../../contants/constants.dart';
+import 'package:fastaagent/core/pick_image.dart';
+import 'package:fastaagent/features/bottom_nav/home.dart';
+import 'package:fastaagent/global_widget/form_field.dart';
+import 'package:fastaagent/global_widget/button_component.dart';
+
+// import 'package:url_launcher/url_launcher.dart';
+
+final Uri _url = Uri.parse('https://www.fasta-smata.com/terms&condition');
+
+class AgentFrom extends StatefulWidget {
+  const AgentFrom({super.key});
+
+  @override
+  State<AgentFrom> createState() => _AgentFromState();
+}
+
+class _AgentFromState extends State<AgentFrom> {
+  // DriverController driverController = Get.put(DriverController());
+  final fullNameCon = TextEditingController();
+  final bvNumCon = TextEditingController();
+  final ninCon = TextEditingController();
+  bool isloading = false;
+  bool isComplete = false;
+  bool value = false;
+  File? driverImage;
+  File? ninImage;
+
+  bool driverIsUploaded = false;
+  bool ninIsUploaded = false;
+
+  @override
+  void dispose() {
+    fullNameCon.dispose();
+    ninCon.dispose();
+    bvNumCon.dispose();
+    // DStorage.driverlogOut();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColor.mainColor,
+      body: isloading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColor.mainSecondryColor,
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 50),
+                    Text(
+                      "Please enter the right data in the box.",
+                      style: AppTextStyle.body(),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Your Name",
+                      style: AppTextStyle.capton(fontWeight: FontWeight.bold),
+                    ),
+                    Formfied(
+                        controller: fullNameCon,
+                        hintText: "Full Name",
+                        keyboardType: TextInputType.name),
+                    const SizedBox(height: 20),
+                    Text("Enter your BVN",
+                        style:
+                            AppTextStyle.capton(fontWeight: FontWeight.bold)),
+                    Formfied(
+                        controller: bvNumCon,
+                        hintText: "BVN Number",
+                        keyboardType: TextInputType.number),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Enter your NIN",
+                      style: AppTextStyle.capton(fontWeight: FontWeight.bold),
+                    ),
+                    Formfied(
+                      controller: ninCon,
+                      hintText: "NIN Number",
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    Text("Upload your NIN Card",
+                        style:
+                            AppTextStyle.capton(fontWeight: FontWeight.bold)),
+                    UploadBotton(
+                      onPressed: () async {
+                        File? nin = await pickImage();
+                        if (nin != null) {
+                          setState(() {
+                            ninImage = nin;
+                            ninIsUploaded = true;
+                          });
+                        }
+                      },
+                      uploaded: ninIsUploaded,
+                    ),
+                    const SizedBox(height: 20),
+                    Text("Upload your Driver’s License Card",
+                        style:
+                            AppTextStyle.capton(fontWeight: FontWeight.bold)),
+                    UploadBotton(
+                      onPressed: () async {
+                        File? driver = await pickImage();
+                        if (driver != null) {
+                          setState(() {
+                            driverImage = driver;
+                            driverIsUploaded = true;
+                          });
+                        }
+                      },
+                      uploaded: driverIsUploaded,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: value,
+                            onChanged: (v) {
+                              if (ninCon.text == '' || bvNumCon.text == "") {
+                                setState(() {
+                                  isComplete = false;
+                                });
+                                Get.snackbar("Notice", "All feild Are Required",
+                                    snackPosition: SnackPosition.BOTTOM);
+                              } else {
+                                setState(() {
+                                  value = v!;
+                                  isComplete = true;
+                                });
+                              }
+                            }),
+                        Expanded(
+                          child: InkWell(
+                            onTap: launchUr,
+                            // Get.to(() => WebView(
+                            //       url: AppApis.termsCondition,
+                            //     ));
+                            //  } ,
+                            child: Text(
+                                "Please be aware that you are not eligible to receive any dispatcher requests until you have received admin approval. If you are approved, the null-tag will become approved, and if you are rejected, it will become disapproved. Read terms and conditions to Continue",
+                                style: AppTextStyle.capton()),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    isComplete
+                        ? ButtonComp(
+                            onPressed: () async {
+                              Get.off(() => const HomePage());
+                              if (driverImage == null || ninImage == null) {
+                                Get.snackbar(
+                                  "Notice",
+                                  "Pick all the Image",
+                                );
+                              } else {
+                                Get.off(() => const HomePage());
+                                // File dImg = driverImage!;
+                                // File ninImg = ninImage!;
+                                // File dobImg = dobImage!;
+                                // setState(() {
+                                //   isloading = true;
+                                // });
+                                // await driverController.uplold(
+                                //     name: widget.name,
+                                //     nin: ninCon.text,
+                                //     bvn: bvNumCon.text,
+                                //     bvnImage: dImg,
+                                //     ninImage: ninImg,
+                                //     dobImage: dobImg);
+                                // setState(() {
+                                //   isloading = false;
+                                // });
+                                // successShowDialod(
+                                //     context: context,
+                                //     onPressed: () {
+                                //       Get.offAll(() => DispatcherLoginScreen());
+                                //     },
+                                //     value:
+                                //         'Your registration is now complete, and you can proceed to log in as a Dispatcher.',
+                                //     bottonValue: "Login");
+                              }
+                            },
+                            value: "Complete")
+                        : const InActiveButtonComp(value: "Complete"),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+
+  Future<void> launchUr() async {
+    //   if (!await launchUrl(_url)) {
+    //     throw Exception('Could not launch $_url');
+    //   }
+  }
+}
+
+class UploadBotton extends StatelessWidget {
+  final bool uploaded;
+  final VoidCallback onPressed;
+  const UploadBotton({
+    super.key,
+    this.uploaded = false,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: uploaded ? 78 : 48,
+        width: 128,
+        decoration: BoxDecoration(
+            color: AppColor.gray, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            uploaded
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      AppImages.failedAlertImage,
+                      height: 20,
+                      width: 18,
+                    ),
+                  )
+                : Container(),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                uploaded ? "Uploaded" : "Upload",
+                style: AppTextStyle.capton(),
+              ),
+              const SizedBox(width: 15),
+              Image.asset(AppImages.uploadIcon)
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,28 @@
+name: fastaagent
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  get: ^4.6.5
+  flutter_screenutil: ^5.8.4
+  google_fonts: ^5.1.0
+  fl_country_code_picker: ^0.1.5
+  image_picker: ^1.0.0
+  image_cropper: ^5.0.0
+  qr_flutter: ^4.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+ 
