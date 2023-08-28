@@ -1,13 +1,26 @@
+import 'package:fastaagent/apis/models/user_model.dart';
+import 'package:fastaagent/controller/profile_controler.dart';
+import 'package:fastaagent/controller/user_com.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:fastaagent/contants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../../apis/models/agent_history_model.dart';
+import '../../controller/agent_controller.dart';
+import '../../controller/history_controller.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final AgentController userController = Get.put(AgentController());
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    UserModel? user = Get.put(AgentCom()).getUser;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.brandColor,
@@ -64,8 +77,8 @@ class HomeScreen extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Container(
-                                height: 360.h,
+                              child: SizedBox(
+                                height: 380.h,
                                 width: 300.w,
                                 // decoration: BoxDecoration(
                                 //   borderRadius: BorderRadius.circular(25),
@@ -81,20 +94,43 @@ class HomeScreen extends StatelessWidget {
                                       style: AppTextStyle.body(),
                                     ),
                                     SizedBox(height: 10.h),
-                                    const CircleAvatar(
-                                        radius: 30,
-                                        backgroundColor: AppColor.brandColor,
-                                        child: Icon(
-                                          Icons.person,
-                                          color: AppColor.whiteColor,
-                                          size: 60,
-                                        )),
-                                    Text("Jones Angelina",
+                                    GetBuilder<ProfileController>(
+                                        builder: (controller) {
+                                      if (controller.getAgentProflie?.data.agent
+                                              .profileImage !=
+                                          null) {
+                                        return CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: AppColor.brandColor,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Image.network(
+                                              "${controller.getAgentProflie?.data.agent.profileImage}",
+                                              height: 100,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return const CircleAvatar(
+                                            radius: 40,
+                                            backgroundColor:
+                                                AppColor.brandColor,
+                                            child: Icon(
+                                              Icons.person,
+                                              color: AppColor.whiteColor,
+                                              size: 60,
+                                            ));
+                                      }
+                                    }),
+                                    Text("${user?.data.user.name}",
                                         style: AppTextStyle.capton()),
                                     SizedBox(height: 10.h),
                                     SizedBox(
                                       child: QrImageView(
-                                          data: "https://getequippedfirst.com/",
+                                          data: "${user?.data.user.id}",
                                           size: 200,
                                           errorCorrectionLevel:
                                               QrErrorCorrectLevel.M),
@@ -160,14 +196,33 @@ class HomeScreen extends StatelessWidget {
                               child: Center(
                                 child: Row(
                                   children: [
-                                    const Icon(
-                                      Icons.copy_rounded,
-                                      color: AppColor.brandColor,
+                                    GestureDetector(
+                                      onTap: () {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: "${user?.data.user.id}",
+                                          ),
+                                        );
+                                        Get.snackbar(
+                                          "Copied",
+                                          "Copied to clipboard",
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          backgroundColor: AppColor.brandColor,
+                                          colorText: AppColor.whiteColor,
+                                        );
+                                      },
+                                      child: const Icon(
+                                        Icons.copy_rounded,
+                                        color: AppColor.brandColor,
+                                      ),
                                     ),
-                                    Text("FA001",
-                                        style: AppTextStyle.body(
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColor.black)),
+                                    SelectableText(
+                                      "${user?.data.user.id}",
+                                      style: AppTextStyle.body(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColor.black),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -175,18 +230,29 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        height: 45.h,
-                        width: 100.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColor.whiteColor,
-                        ),
-                        child: Text(
-                          "Invite Friends",
-                          textAlign: TextAlign.center,
-                          style: AppTextStyle.body(
-                            fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          Share.share(
+                              'Am Fasta Agent Register with my referial code ${user?.data.user.id} download the app from playstore https://play.google.com/store/apps/details?id=com.fastasmata.fasta or \nfrom AppStore ',
+                              subject:
+                                  'Am Fasta Agent Register with my referial code');
+                        },
+                        child: Container(
+                          height: 45.h,
+                          width: 100.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: AppColor.whiteColor,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Invite \nFriends",
+                              textAlign: TextAlign.center,
+                              style: AppTextStyle.body(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -197,19 +263,25 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 15.h,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Paymentbutton(
-                      title: "Amount Made", subtitle: '₦35,000.67'),
-                  SizedBox(
-                    width: 30.w,
-                  ),
-                  const Paymentbutton(
-                      title: "Payment Plan", subtitle: "Weekly"),
-                ],
-              )
+              GetBuilder<ProfileController>(builder: (controller) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Paymentbutton(
+                        title: "Amount Made",
+                        subtitle:
+                            '${controller.getAgentProflie?.data.totalIncome ?? 0}'),
+                    SizedBox(
+                      width: 30.w,
+                    ),
+                    Paymentbutton(
+                        title: "Payment Plan",
+                        subtitle:
+                            '${controller.getAgentProflie?.data.agent.paymentOption ?? "Not set"}'),
+                  ],
+                );
+              })
             ]),
           ),
           Container(
@@ -229,52 +301,60 @@ class HomeScreen extends StatelessWidget {
                       style: AppTextStyle.heading2(),
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.7,
-                    child: ListView.builder(
-                      itemCount: 13,
-                      itemBuilder: (context, index) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        height: 60.h,
-                        decoration: BoxDecoration(
-                            color: AppColor.brandColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Bosemide Akim",
-                                      style: AppTextStyle.body(
-                                        color: AppColor.whiteColor,
+                  GetBuilder<HistoryController>(builder: (controller) {
+                    List<HistoryEntry> historyEntrys = controller.historyEntrys;
+                    historyEntrys
+                        .sort((a, b) => b.createdAt.compareTo(a.createdAt));
+                    return SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.7,
+                      child: ListView.builder(
+                          itemCount: historyEntrys.length,
+                          itemBuilder: (context, index) {
+                            HistoryEntry historyEntry = historyEntrys[index];
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height: 60.h,
+                              decoration: BoxDecoration(
+                                  color: AppColor.brandColor,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            historyEntry.name,
+                                            style: AppTextStyle.body(
+                                              color: AppColor.whiteColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            "${timeago.format(historyEntry.createdAt, locale: 'en_short')}",
+                                            style: AppTextStyle.capton(
+                                              color: AppColor.whiteColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Text(
-                                      "3 min",
-                                      style: AppTextStyle.capton(
-                                        color: AppColor.whiteColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  "+2% from successful delivery",
-                                  style: AppTextStyle.capton(
-                                      color: AppColor.mainSecondryColor),
-                                )
-                              ]),
-                        ),
-                      ),
-                    ),
-                  )
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        historyEntry.message,
+                                        style: AppTextStyle.capton(
+                                            color: AppColor.mainSecondryColor),
+                                      )
+                                    ]),
+                              ),
+                            );
+                          }),
+                    );
+                  })
                 ]),
           )
         ]),

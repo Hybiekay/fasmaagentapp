@@ -8,7 +8,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ButtonComp extends StatelessWidget {
   String value;
   VoidCallback onPressed;
-  ButtonComp({super.key, required this.onPressed, required this.value});
+  final Color? bgcolor;
+  final Color? textColor;
+  ButtonComp(
+      {super.key,
+      required this.onPressed,
+      this.textColor,
+      this.bgcolor,
+      required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +24,14 @@ class ButtonComp extends StatelessWidget {
       child: Container(
         height: 45.h,
         decoration: BoxDecoration(
-          color: AppColor.brandColor,
+          color: bgcolor ?? AppColor.whiteColor,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Center(
           child: Text(
             value,
             style: GoogleFonts.dmSans(
-              color: AppColor.mainColor,
+              color: textColor ?? AppColor.mainColor,
               fontSize: 20.sp,
               fontWeight: FontWeight.w700,
             ),

@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:fastaagent/controller/agent_controller.dart';
+import 'package:fastaagent/global_widget/headerbar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../../contants/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../contants/constants.dart';
 import 'package:fastaagent/core/pick_image.dart';
-import 'package:fastaagent/features/bottom_nav/home.dart';
 import 'package:fastaagent/global_widget/form_field.dart';
 import 'package:fastaagent/global_widget/button_component.dart';
 
@@ -12,31 +15,41 @@ import 'package:fastaagent/global_widget/button_component.dart';
 final Uri _url = Uri.parse('https://www.fasta-smata.com/terms&condition');
 
 class AgentFrom extends StatefulWidget {
-  const AgentFrom({super.key});
+  final String name;
+  final String email;
+  final String phone;
+
+  const AgentFrom(
+      {super.key,
+      required this.name,
+      required this.email,
+      required this.phone});
 
   @override
   State<AgentFrom> createState() => _AgentFromState();
 }
 
 class _AgentFromState extends State<AgentFrom> {
+  AgentController driverController = Get.put(AgentController());
   // DriverController driverController = Get.put(DriverController());
-  final fullNameCon = TextEditingController();
-  final bvNumCon = TextEditingController();
+  final confirmpasswordController = TextEditingController();
   final ninCon = TextEditingController();
+  final passwordController = TextEditingController();
   bool isloading = false;
   bool isComplete = false;
   bool value = false;
-  File? driverImage;
-  File? ninImage;
 
+  File? ninImage;
   bool driverIsUploaded = false;
   bool ninIsUploaded = false;
-
+  bool ispassword = false;
+  bool isConfirmPassword = false;
   @override
   void dispose() {
-    fullNameCon.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
     ninCon.dispose();
-    bvNumCon.dispose();
+
     // DStorage.driverlogOut();
 
     super.dispose();
@@ -58,28 +71,12 @@ class _AgentFromState extends State<AgentFrom> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    HeaderWidget(subTitle: "", onPressed: () {}),
                     const SizedBox(height: 50),
                     Text(
                       "Please enter the right data in the box.",
                       style: AppTextStyle.body(),
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Your Name",
-                      style: AppTextStyle.capton(fontWeight: FontWeight.bold),
-                    ),
-                    Formfied(
-                        controller: fullNameCon,
-                        hintText: "Full Name",
-                        keyboardType: TextInputType.name),
-                    const SizedBox(height: 20),
-                    Text("Enter your BVN",
-                        style:
-                            AppTextStyle.capton(fontWeight: FontWeight.bold)),
-                    Formfied(
-                        controller: bvNumCon,
-                        hintText: "BVN Number",
-                        keyboardType: TextInputType.number),
                     const SizedBox(height: 20),
                     Text(
                       "Enter your NIN",
@@ -90,8 +87,72 @@ class _AgentFromState extends State<AgentFrom> {
                       hintText: "NIN Number",
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: 20),
-                    const SizedBox(height: 20),
+                    Text("Password", style: AppTextStyle.capton()),
+                    SizedBox(height: 10.h),
+                    Formfied(
+                        isPassword: true,
+                        validator: (p0) {
+                          if (p0!.isEmpty || p0.length < 8) {
+                            setState(() {
+                              ispassword = true;
+                            });
+                            return null;
+                          }
+                          return null;
+                        },
+                        onChanged: (p0) {
+                          setState(() {
+                            ispassword = false;
+                          });
+                        },
+                        hintText: "Password",
+                        controller: passwordController),
+                    Visibility(
+                        visible: ispassword,
+                        child: Text(
+                          'Your password must contain at lease 8 characters',
+                          style: GoogleFonts.dmSans(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.errorColor),
+                        )),
+                    SizedBox(height: 10.h),
+                    Text(
+                      "Confirm Password",
+                      style: AppTextStyle.capton(),
+                    ),
+                    SizedBox(height: 7.h),
+                    Formfied(
+                      validator: (p0) {
+                        if (p0!.isEmpty || p0 != passwordController.text) {
+                          setState(() {
+                            isConfirmPassword = true;
+                          });
+                          return null;
+                        }
+                        return null;
+                      },
+                      onChanged: (p0) {
+                        setState(() {
+                          isConfirmPassword = false;
+                          ispassword = false;
+                        });
+                      },
+                      hintText: "Confirm Password",
+                      controller: confirmpasswordController,
+                      isPassword: true,
+                    ),
+                    SizedBox(height: 10.h),
+                    Visibility(
+                        visible: isConfirmPassword,
+                        child: Text(
+                          'Wrong confirm password inputted',
+                          style: GoogleFonts.dmSans(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.errorColor),
+                        )),
+                    SizedBox(height: 10.h),
                     Text("Upload your NIN Card",
                         style:
                             AppTextStyle.capton(fontWeight: FontWeight.bold)),
@@ -107,29 +168,13 @@ class _AgentFromState extends State<AgentFrom> {
                       },
                       uploaded: ninIsUploaded,
                     ),
-                    const SizedBox(height: 20),
-                    Text("Upload your Driver’s License Card",
-                        style:
-                            AppTextStyle.capton(fontWeight: FontWeight.bold)),
-                    UploadBotton(
-                      onPressed: () async {
-                        File? driver = await pickImage();
-                        if (driver != null) {
-                          setState(() {
-                            driverImage = driver;
-                            driverIsUploaded = true;
-                          });
-                        }
-                      },
-                      uploaded: driverIsUploaded,
-                    ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
                     Row(
                       children: [
                         Checkbox(
                             value: value,
                             onChanged: (v) {
-                              if (ninCon.text == '' || bvNumCon.text == "") {
+                              if (ninCon.text == '') {
                                 setState(() {
                                   isComplete = false;
                                 });
@@ -160,39 +205,49 @@ class _AgentFromState extends State<AgentFrom> {
                     isComplete
                         ? ButtonComp(
                             onPressed: () async {
-                              Get.off(() => const HomePage());
-                              if (driverImage == null || ninImage == null) {
+                              if (passwordController.text == '' ||
+                                  confirmpasswordController.text == '' ||
+                                  ninCon.text == '') {
+                                Get.snackbar("Notice", "All feild Are Required",
+                                    snackPosition: SnackPosition.BOTTOM);
+                              } else if (passwordController.text !=
+                                  confirmpasswordController.text) {
+                                setState(() {
+                                  isConfirmPassword = true;
+                                });
                                 Get.snackbar(
-                                  "Notice",
-                                  "Pick all the Image",
-                                );
+                                    "Notice", "Password does not match",
+                                    snackPosition: SnackPosition.BOTTOM);
+                              } else if (ninImage == null) {
+                                Get.snackbar("Notice", "Pick all the Image",
+                                    snackPosition: SnackPosition.BOTTOM);
                               } else {
-                                Get.off(() => const HomePage());
-                                // File dImg = driverImage!;
-                                // File ninImg = ninImage!;
-                                // File dobImg = dobImage!;
-                                // setState(() {
-                                //   isloading = true;
-                                // });
-                                // await driverController.uplold(
-                                //     name: widget.name,
-                                //     nin: ninCon.text,
-                                //     bvn: bvNumCon.text,
-                                //     bvnImage: dImg,
-                                //     ninImage: ninImg,
-                                //     dobImage: dobImg);
-                                // setState(() {
-                                //   isloading = false;
-                                // });
-                                // successShowDialod(
-                                //     context: context,
-                                //     onPressed: () {
-                                //       Get.offAll(() => DispatcherLoginScreen());
-                                //     },
-                                //     value:
-                                //         'Your registration is now complete, and you can proceed to log in as a Dispatcher.',
-                                //     bottonValue: "Login");
+                                File ninImg = ninImage!;
+
+                                setState(() {
+                                  isloading = true;
+                                });
+                                await driverController.driverCreate(
+                                  password: confirmpasswordController.text,
+                                  email: widget.email,
+                                  fullname: widget.name,
+                                  phoneNumber: widget.phone,
+                                  nin: ninCon.text,
+                                  ninImage: ninImg,
+                                );
+                                setState(() {
+                                  isloading = false;
+                                });
                               }
+
+                              // successShowDialod(
+                              //     context: context,
+                              //     onPressed: () {
+                              //       Get.offAll(() => DispatcherLoginScreen());
+                              //     },
+                              //     value:
+                              //         'Your registration is now complete, and you can proceed to log in as a Dispatcher.',
+                              //     bottonValue: "Login");
                             },
                             value: "Complete")
                         : const InActiveButtonComp(value: "Complete"),

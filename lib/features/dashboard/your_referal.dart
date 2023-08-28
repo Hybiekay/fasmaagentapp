@@ -1,8 +1,12 @@
+import 'package:intl/intl.dart';
+import 'package:fastaagent/controller/profile_controler.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:fastaagent/contants/app_colors.dart';
 import 'package:fastaagent/contants/app_styling.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../apis/models/agent_profile.dart';
 
 class YourReferer extends StatelessWidget {
   const YourReferer({super.key});
@@ -40,67 +44,78 @@ class YourReferer extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          Text(
-            "Total Referral (50)",
-            style: AppTextStyle.body(),
-          ),
+          GetBuilder<ProfileController>(builder: (con) {
+            return Text(
+              "Total Referral (${con.getAllMyDriver.length})",
+              style: AppTextStyle.body(),
+            );
+          }),
           SizedBox(height: 10.h),
           Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return Container(
-                  height: 203.h,
-                  width: 300.w,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: AppColor.brandColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(children: [
-                    const SizedBox(
-                      height: 20,
+            child: GetBuilder<ProfileController>(builder: (controller) {
+              return ListView.builder(
+                itemCount: controller.getAllMyDriver.length,
+                itemBuilder: (context, index) {
+                  Referral driver = controller.getAllMyDriver[index];
+                  return Container(
+                    height: 203.h,
+                    width: 300.w,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: AppColor.brandColor,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CircleAvatar(),
-                        SizedBox(
-                          width: 10.w,
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Angelina Jones",
-                              style:
-                                  AppTextStyle.body(color: AppColor.whiteColor),
-                            ),
-                            Text(
-                              "+234 90 6836 8406",
-                              style: AppTextStyle.capton(
-                                  color: AppColor.whiteColor),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    const DetailView(
-                        title: "Date Joined", subtitle: "7th May, 2022"),
-                    const DetailView(
-                        title: "Successful Deliveries", subtitle: "9"),
-                    const DetailView(
-                        title: "Referral Bonus", subtitle: "₦20,000"),
-                    const DetailView(title: "Status", subtitle: "Approved"),
-                    const DetailView(title: "Last Delivery", subtitle: "Today"),
-                  ]),
-                );
-              },
-            ),
+                    child: Column(children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircleAvatar(),
+                          SizedBox(
+                            width: 10.w,
+                          ),
+                          Column(
+                            children: [
+                              Text(
+                                "${driver.name}",
+                                style: AppTextStyle.body(
+                                    color: AppColor.whiteColor),
+                              ),
+                              Text(
+                                "${driver.phone}",
+                                style: AppTextStyle.capton(
+                                    color: AppColor.whiteColor),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      DetailView(
+                          title: "Date Joined",
+                          subtitle:
+                              "${DateFormat().format(DateTime.parse(driver.createdAt!))}"),
+                      const DetailView(
+                          title: "Successful Deliveries", subtitle: "9"),
+                      DetailView(
+                          title: "Referral Bonus",
+                          subtitle: "${driver.totalReferralBonus}"),
+                      DetailView(title: "Status", subtitle: "${driver.status}"),
+                      DetailView(
+                          title: "Last Delivery",
+                          subtitle:
+                              "${DateFormat().format(DateTime.parse(driver.lastDelivery!))}"),
+                    ]),
+                  );
+                },
+              );
+            }),
           )
         ]),
       ),

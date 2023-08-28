@@ -1,8 +1,10 @@
+import 'package:fastaagent/apis/models/agent_profile.dart';
+import 'package:fastaagent/controller/profile_controler.dart';
+import 'package:fastaagent/features/dashboard/your_referal.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:fastaagent/contants/constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fastaagent/features/dashboard/your_referal.dart';
 
 class DashBoardScreen extends StatelessWidget {
   const DashBoardScreen({super.key});
@@ -10,13 +12,13 @@ class DashBoardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: AppColor.brandColor, elevation: 0),
+      appBar: AppBar(backgroundColor: AppColor.mainSecondryColor, elevation: 0),
       body: SingleChildScrollView(
         child: Column(children: [
           Container(
             height: MediaQuery.sizeOf(context).height * 0.32,
             width: MediaQuery.sizeOf(context).width,
-            decoration: const BoxDecoration(color: AppColor.brandColor),
+            decoration: const BoxDecoration(color: AppColor.mainSecondryColor),
             child: Column(children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -24,35 +26,35 @@ class DashBoardScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      "Brief Metrics",
-                      style: AppTextStyle.body(color: AppColor.whiteColor),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Container(
-                        width: 70,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            color: AppColor.mainSecondryColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Today",
-                                style: AppTextStyle.capton(
-                                    color: AppColor.whiteColor),
-                              ),
-                              const Icon(
-                                Icons.arrow_drop_down,
-                                color: AppColor.whiteColor,
-                              )
-                            ],
-                          ),
-                        )),
+                    // Text(
+                    //   "Brief Metrics",
+                    //   style: AppTextStyle.body(color: AppColor.whiteColor),
+                    // ),
+                    // const SizedBox(
+                    //   width: 15,
+                    // ),
+                    // Container(
+                    //     width: 70,
+                    //     height: 25,
+                    //     decoration: BoxDecoration(
+                    //         color: AppColor.mainSecondryColor,
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     child: Center(
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: [
+                    //           Text(
+                    //             "Today",
+                    //             style: AppTextStyle.capton(
+                    //                 color: AppColor.whiteColor),
+                    //           ),
+                    //           const Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: AppColor.whiteColor,
+                    //           )
+                    //         ],
+                    //       ),
+                    //     )),
                     const Spacer(),
                     GestureDetector(
                         onTap: () {
@@ -66,118 +68,149 @@ class DashBoardScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 15.h,
+                height: 40.h,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 10.h,
-                  ),
-                  const Chart(
-                    todayIncome: 50 / 100,
-                    todayActiveReferral: 60 / 100,
-                    todayCompletedDeliveries: 35 / 100,
-                    todayReferredDispatcher: 70 / 100,
-                  ),
-                  const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const ColorAndText(
-                        color: AppColor.mainSecondryColor,
-                        text: "Today’s Income",
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      const ColorAndText(
-                        color: AppColor.blue,
-                        text: "Today’s Active Referral",
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      const ColorAndText(
-                        color: AppColor.orange,
-                        text: "Today’s Completed Deliveries",
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      const ColorAndText(
-                        color: AppColor.amber,
-                        text: "Today’s Referred Dispatcher",
-                      ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      const ColorAndText(
-                        color: AppColor.whiteColor,
-                        text: "Previous day metrics",
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10.w,
-                  )
-                ],
-              )
+              Image.asset(
+                AppImages.logoPath,
+                height: 100,
+                width: 150,
+              ),
+              // Row(
+              //   children: [
+              //     SizedBox(
+              //       width: 10.h,
+              //     ),
+              //     const Chart(
+              //       todayIncome: 50 / 100,
+              //       todayActiveReferral: 60 / 100,
+              //       todayCompletedDeliveries: 35 / 100,
+              //       todayReferredDispatcher: 70 / 100,
+              //     ),
+              //     const Spacer(),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         const ColorAndText(
+              //           color: AppColor.mainSecondryColor,
+              //           text: "Today’s Income",
+              //         ),
+              //         SizedBox(
+              //           height: 10.h,
+              //         ),
+              //         const ColorAndText(
+              //           color: AppColor.blue,
+              //           text: "Today’s Active Referral",
+              //         ),
+              //         SizedBox(
+              //           height: 10.h,
+              //         ),
+              //         const ColorAndText(
+              //           color: AppColor.orange,
+              //           text: "Today’s Completed Deliveries",
+              //         ),
+              //         SizedBox(
+              //           height: 10.h,
+              //         ),
+              //         const ColorAndText(
+              //           color: AppColor.amber,
+              //           text: "Today’s Referred Dispatcher",
+              //         ),
+              //         SizedBox(
+              //           height: 10.h,
+              //         ),
+              //         const ColorAndText(
+              //           color: AppColor.whiteColor,
+              //           text: "Previous day metrics",
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(
+              //       width: 10.w,
+              //     )
+              //   ],
+              // )
             ]),
           ),
-          Container(
-            height: MediaQuery.sizeOf(context).height * 0.7,
-            decoration: const BoxDecoration(color: AppColor.whiteColor),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.7,
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemCount: 4,
-                      itemBuilder: (context, index) => Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        // height: 50.h,
-                        width: 140.w,
-                        decoration: BoxDecoration(
-                            color: AppColor.brandColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "₦50,000",
-                                  style: AppTextStyle.body(
-                                    color: AppColor.whiteColor,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 15.h,
-                                ),
-                                Text(
-                                  "Today’s Income",
-                                  style: AppTextStyle.capton(
-                                    color: AppColor.whiteColor,
-                                  ),
-                                ),
-                              ]),
+          GetBuilder<ProfileController>(builder: (controller) {
+            AgentData? agentData = controller.getagentdata;
+            return Container(
+              height: MediaQuery.sizeOf(context).height * 0.7,
+              decoration: const BoxDecoration(color: AppColor.whiteColor),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        DashBoardBox(
+                          value: "${agentData?.totalIncome}",
+                          label: "Today’s Income",
                         ),
-                      ),
+                        DashBoardBox(
+                          value: "${agentData?.totalActiveReferralsCounts}",
+                          label: "Today’s Active Referral",
+                        )
+                      ],
                     ),
-                  )
-                ]),
-          )
+                    Row(
+                      children: [
+                        DashBoardBox(
+                          value:
+                              "${agentData?.totalCompletedDeliveriesCounts.length}",
+                          label: "Today’s Completed Deliveries",
+                        ),
+                        DashBoardBox(
+                          value: "${agentData?.totalReferralsCounts}",
+                          label: "Today’s Referred Dispatcher",
+                        )
+                      ],
+                    )
+                  ]),
+            );
+          })
         ]),
+      ),
+    );
+  }
+}
+
+class DashBoardBox extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const DashBoardBox({super.key, required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      height: 170.h,
+      width: 160.w,
+      decoration: BoxDecoration(
+          color: AppColor.brandColor, borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                value,
+                style: AppTextStyle.body(
+                  color: AppColor.whiteColor,
+                ),
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: AppTextStyle.capton(
+                  color: AppColor.whiteColor,
+                ),
+              ),
+            ]),
       ),
     );
   }

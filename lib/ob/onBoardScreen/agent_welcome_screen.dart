@@ -1,8 +1,10 @@
+import 'package:fastaagent/global_widget/button_component.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:fastaagent/contants/constants.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fastaagent/features/Dispatcherauth/login_screen.dart';
+import '../../features/auth/sign_in/sign_in.dart';
+import '../../features/auth/sign_up/sign_up.dart';
 
 class AgentWelcomeScreen extends StatelessWidget {
   const AgentWelcomeScreen({super.key});
@@ -43,26 +45,22 @@ class AgentWelcomeScreen extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.07,
                 ),
-                Center(
-                  child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color.fromRGBO(255, 255, 255, 1),
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.brandColor),
-                        onPressed: () {
-                          Get.to(() => const LoginScreen());
-                        },
-                        child: Text('Get Started',
-                            textAlign: TextAlign.center,
-                            style: AppTextStyle.body(
-                              color: AppColor.whiteColor,
-                            )),
-                      )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ButtonComp(
+                      onPressed: () {
+                        Get.to(() => const SignIn());
+                      },
+                      value: "Login"),
+                ),
+                SizedBox(height: 10.h),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ButtonComp(
+                      onPressed: () {
+                        Get.to(() => const SignUp());
+                      },
+                      value: "Sign Up"),
                 ),
               ])),
     );

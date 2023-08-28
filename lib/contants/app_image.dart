@@ -11,4 +11,5 @@ class AppImages {
   static const String fa001bg = 'assets/images/fa001bg.png';
   static const String reficon = 'assets/images/RefferalsBtn.png';
   static const String exitIcon = 'assets/images/exit.png';
+  static const String successAlertImage = 'assets/images/successmark.png';
 }

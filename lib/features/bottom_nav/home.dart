@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import '../../controller/history_controller.dart';
+import '../../controller/profile_controler.dart';
 import '../home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fastaagent/contants/constants.dart';
@@ -14,11 +16,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ProfileController profileController = Get.put(ProfileController());
+  final HistoryController historyController = Get.put(HistoryController());
   BottomNav bottomNav = Get.put(BottomNav());
-  List pages = const [HomeScreen(), DashBoardScreen(), ProfileScreen()];
+  List pages = [HomeScreen(), const DashBoardScreen(), const ProfileScreen()];
   @override
   Widget build(BuildContext context) {
+    historyController.getAlltheHistory();
     return GetBuilder<BottomNav>(builder: (context) {
+      historyController.getAlltheHistory();
       return Scaffold(
         body: pages[context.currentIndex.value],
         bottomNavigationBar: BottomNavigationBar(
