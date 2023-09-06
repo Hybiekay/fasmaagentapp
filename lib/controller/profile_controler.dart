@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:fastaagent/controller/secure_storage.dart';
 import 'package:get/get.dart';
 
 import '../apis/models/agent_profile.dart';
@@ -9,7 +13,6 @@ class ProfileController extends GetxController {
   Agent? _agent;
   AgentData? _agentData;
   List<Referral> _listOfReferedDrider = [];
-  AgentProfile? get getAgentProflie => _agentProfile;
   List<Referral> get getAllMyDriver => _listOfReferedDrider;
   Agent? get getAgentDetails => _agent;
   AgentData? get getagentdata => _agentData;
@@ -17,7 +20,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     getAngetDetails();
-
+    getAgentData();
     super.onInit();
   }
 
@@ -25,6 +28,7 @@ class ProfileController extends GetxController {
     AgentProfile? agentProfile = await userController.getprofile();
 
     _agentProfile = agentProfile;
+
     update();
     getAgent();
     getAgentData();
@@ -32,42 +36,61 @@ class ProfileController extends GetxController {
     getListOfReferedDriver();
   }
 
-  getAgentData() {
+  getAgentData() async {
     if (_agentProfile != null) {
       AgentData agentData = _agentProfile!.data;
       _agentData = agentData;
       update();
     } else {
-      Get.snackbar("Error", "Refresh the app");
+      var res = await AStorage.getAgentProfile();
+
+      if (res != null) {
+        log(res);
+        AgentProfile agentProfile = AgentProfile.fromJson(json.decode(res));
+        AgentData agentData = agentProfile.data;
+
+        log(agentData.toString());
+        _agentData = agentData;
+        update();
+        Agent agent = agentProfile.data.agent;
+
+        _agent = agent;
+
+        update();
+        List<Referral> drivers = agentProfile.data.totalReferral;
+        _listOfReferedDrider = drivers;
+
+        update();
+        getAgent();
+
+        getListOfReferedDriver();
+      }
     }
   }
 
-  getAgent() {
+  getAgent() async {
     if (_agentProfile != null) {
       Agent agent = _agentProfile!.data.agent;
       _agent = agent;
       update();
-    } else {
-      Get.snackbar("Error", "Refresh the app");
-    }
+    } else {}
   }
 
-  getListOfReferedDriver() {
+  getListOfReferedDriver() async {
     if (_agentProfile != null) {
       _listOfReferedDrider = [];
       List<Referral> drivers = _agentProfile!.data.totalReferral;
-      _listOfReferedDrider.addAll(drivers);
+      _listOfReferedDrider = drivers;
       update();
-    } else {
-      Get.snackbar("Error", "Refresh the app");
-    }
+    } else {}
   }
 
-  //  getListOfRefered() {
-  //   if (_agentProfile != null) {
-  //     List<ReferedDriver> agent = _agentProfile!.data.totalReferrals;
-  //   } else {
-  //     Get.snackbar("Error", "Refresh the app");
-  //   }
-  // }
+  Referral? getDriverbyId(String id) {
+    bool isExist = _listOfReferedDrider.any((element) => element.id == id);
+    if (isExist) {
+      return _listOfReferedDrider.firstWhere((element) => element.id == id);
+    } else {
+      return null;
+    }
+  }
 }

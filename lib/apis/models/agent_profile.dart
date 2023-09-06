@@ -108,12 +108,12 @@ class AgentProfile {
 
 class AgentData {
   Agent agent;
-  int totalReferralsCounts;
+  num totalReferralsCounts;
   List<Referral> totalReferral;
-  int totalActiveReferralsCounts;
+  num totalActiveReferralsCounts;
   List<dynamic> totalActiveReferrals; // Change the type accordingly
-  int totalIncome;
-  List<int> totalCompletedDeliveriesCounts;
+  num totalIncome;
+  List<num> totalCompletedDeliveriesCounts;
   List<List<Delivery>> totalCompletedDeliveries;
 
   AgentData({
@@ -138,7 +138,7 @@ class AgentData {
             json['totalActiveReferrals'], // Change the type accordingly
         totalIncome: json['totalIncome'],
         totalCompletedDeliveriesCounts:
-            List<int>.from(json['totalCompletedDeliveriesCounts']),
+            List<num>.from(json['totalCompletedDeliveriesCounts']),
         totalCompletedDeliveries: List<List<Delivery>>.from(
           json['totalCompletedDeliveries'].map((deliveries) =>
               List<Delivery>.from(deliveries
@@ -239,8 +239,8 @@ class Referral {
   String? updatedAt;
   String? role;
   String? nin;
-  int totalReferralBonus;
-  int totalSuccessfulDeliveries;
+  num totalReferralBonus;
+  num totalSuccessfulDeliveries;
   bool isCompletedRegistration;
   bool isVerified;
   String? lastDelivery;
@@ -295,10 +295,10 @@ class Delivery {
   String? updatedAt;
   String? name;
   String? description;
-  int size;
-  int weight;
-  int height;
-  int width;
+  num size;
+  num weight;
+  num height;
+  num width;
   String? price;
   String? driverPrice;
   bool isDriverPaid;

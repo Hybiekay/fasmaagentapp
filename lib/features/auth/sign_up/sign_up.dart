@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../contants/constants.dart';
+import '../../../global_widget/loading.dart';
 import 'agent_form.dart';
 
 class SignUp extends StatefulWidget {
@@ -58,7 +59,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: AppColor.mainColor,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Loader()
           : SingleChildScrollView(
               child: Form(
                 key: _formKey,
@@ -100,7 +101,6 @@ class _SignUpState extends State<SignUp> {
                                 onChanged: (p0) {
                                   setState(() {
                                     isfullname = false;
-
                                     isemailController = false;
                                     inCorrect = false;
                                   });
@@ -137,7 +137,6 @@ class _SignUpState extends State<SignUp> {
                               onChanged: (p0) {
                                 setState(() {
                                   isfullname = false;
-
                                   isemailController = false;
                                   inCorrect = false;
                                 });
@@ -260,8 +259,7 @@ class _SignUpState extends State<SignUp> {
                                       setState(() {
                                         isfullname = true;
                                       });
-                                    } else if (phoneController.text.isEmpty ||
-                                        !phoneController.text.isPhoneNumber) {
+                                    } else if (phoneController.text.isEmpty) {
                                       setState(() {
                                         inCorrect = true;
                                       });
@@ -271,7 +269,7 @@ class _SignUpState extends State<SignUp> {
                                         isemailController = true;
                                       });
                                     } else {
-                                      Get.offAll(
+                                      Get.off(
                                         () => AgentFrom(
                                           email: emailController.text,
                                           name: fullNameController.text,

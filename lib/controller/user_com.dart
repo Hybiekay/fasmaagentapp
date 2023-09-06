@@ -19,6 +19,6 @@ class AgentCom extends GetxController {
       var user = UserModel.fromJson(json.decode(str));
       _driverDetails = user;
       update();
-    } else {}
+    }
   }
 }

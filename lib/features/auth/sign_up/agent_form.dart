@@ -10,8 +10,6 @@ import 'package:fastaagent/core/pick_image.dart';
 import 'package:fastaagent/global_widget/form_field.dart';
 import 'package:fastaagent/global_widget/button_component.dart';
 
-// import 'package:url_launcher/url_launcher.dart';
-
 final Uri _url = Uri.parse('https://www.fasta-smata.com/terms&condition');
 
 class AgentFrom extends StatefulWidget {
@@ -19,11 +17,12 @@ class AgentFrom extends StatefulWidget {
   final String email;
   final String phone;
 
-  const AgentFrom(
-      {super.key,
-      required this.name,
-      required this.email,
-      required this.phone});
+  const AgentFrom({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.phone,
+  });
 
   @override
   State<AgentFrom> createState() => _AgentFromState();
@@ -71,7 +70,11 @@ class _AgentFromState extends State<AgentFrom> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HeaderWidget(subTitle: "", onPressed: () {}),
+                    HeaderWidget(
+                        subTitle: "",
+                        onPressed: () {
+                          Get.back();
+                        }),
                     const SizedBox(height: 50),
                     Text(
                       "Please enter the right data in the box.",
@@ -222,8 +225,6 @@ class _AgentFromState extends State<AgentFrom> {
                                 Get.snackbar("Notice", "Pick all the Image",
                                     snackPosition: SnackPosition.BOTTOM);
                               } else {
-                                File ninImg = ninImage!;
-
                                 setState(() {
                                   isloading = true;
                                 });
@@ -233,7 +234,7 @@ class _AgentFromState extends State<AgentFrom> {
                                   fullname: widget.name,
                                   phoneNumber: widget.phone,
                                   nin: ninCon.text,
-                                  ninImage: ninImg,
+                                  ninImage: ninImage!,
                                 );
                                 setState(() {
                                   isloading = false;

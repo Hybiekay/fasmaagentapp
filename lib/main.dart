@@ -43,7 +43,6 @@ class SlashScreen extends StatelessWidget {
     Future.delayed(const Duration(seconds: 3), () async {
       var globalToken = await AStorage.getDriverToken();
       if (globalToken != null) {
-        print('Global token is $globalToken');
         bool hasExpired = JwtDecoder.isExpired(globalToken);
         if (!hasExpired) {
           Map<String, dynamic> decodedToken = JwtDecoder.decode(globalToken);
@@ -80,7 +79,6 @@ class SlashScreen extends StatelessWidget {
       } else {
         Get.offAll(() => const OnboardingScreen());
       }
-      //  Get.offAll(() => const OnboardingScreen());
     });
     return Scaffold(
       body: Column(

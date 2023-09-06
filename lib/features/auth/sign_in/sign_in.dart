@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:fastaagent/controller/agent_controller.dart';
 import 'package:fastaagent/features/auth/forgetten_password/in_put_password.dart';
 import 'package:fastaagent/global_widget/button_component.dart';
@@ -7,8 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../apis/models/user_model.dart';
 import '../../../contants/constants.dart';
+import '../../../controller/secure_storage.dart';
 import '../../../global_widget/loading.dart';
+import '../../bottom_nav/home.dart';
+import '../sign_up/d_register_screen.dart';
+import '../sign_up/verification_screen.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -118,12 +126,74 @@ class _SignInState extends State<SignIn> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  await driverController.loginUser(
+                                  var data = await driverController.loginUser(
                                       email: emailController.text,
                                       password: passwordController.text);
                                   setState(() {
                                     isLoading = false;
                                   });
+                                  if (data.statusCode == 400) {
+                                    log(data.body);
+                                    final res = json.decode(data.body);
+                                    Get.snackbar(
+                                        backgroundColor:
+                                            AppColor.mainSecondryColor,
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        "Error",
+                                        res["message"]);
+                                    if (res["message"] ==
+                                        "Please verify your account") {
+                                      Get.to(() => VerificationScreen(
+                                            phoneNumber: res["phone"],
+                                            email: emailController.text,
+                                            password: passwordController.text,
+                                          ));
+                                    }
+                                  } else if (data.statusCode == 201) {
+                                    // log(data.body);
+                                    final res = json.decode(data.body);
+
+                                    UserModel driverResponse =
+                                        UserModel.fromJson(res);
+                                    AStorage.saveDriverToken(
+                                        driverResponse.token);
+
+                                    if (driverResponse
+                                                .data.user.accountNumber ==
+                                            null ||
+                                        driverResponse.data.user.accountName ==
+                                            null ||
+                                        driverResponse.data.user.bankName ==
+                                            null) {
+                                      AStorage.saveDriverToken(
+                                          driverResponse.token);
+
+                                      Get.to(() => AddBankDetails(
+                                            phoneNum: driverResponse
+                                                    .data.user.phone ??
+                                                '',
+                                          ));
+                                    } else if (driverResponse
+                                                .data.user.accountNumber !=
+                                            null &&
+                                        driverResponse.data.user.accountName !=
+                                            null &&
+                                        driverResponse.data.user.bankName !=
+                                            null) {
+                                      AStorage.saveDriverToken(
+                                          driverResponse.token);
+
+                                      await AStorage.saveDriverData(data.body);
+                                      Get.offAll(() => const HomePage());
+                                    } else {
+                                      Get.snackbar(
+                                          backgroundColor:
+                                              AppColor.mainSecondryColor,
+                                          snackPosition: SnackPosition.BOTTOM,
+                                          "Error",
+                                          "Some Error Occured");
+                                    }
+                                  }
                                 }
                               },
                               value: "Complete"),

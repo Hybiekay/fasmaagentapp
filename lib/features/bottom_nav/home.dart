@@ -22,9 +22,10 @@ class _HomePageState extends State<HomePage> {
   List pages = [HomeScreen(), const DashBoardScreen(), const ProfileScreen()];
   @override
   Widget build(BuildContext context) {
-    historyController.getAlltheHistory();
     return GetBuilder<BottomNav>(builder: (context) {
-      historyController.getAlltheHistory();
+      historyController.getAllHistory();
+
+      profileController.getAgentData();
       return Scaffold(
         body: pages[context.currentIndex.value],
         bottomNavigationBar: BottomNavigationBar(
@@ -37,20 +38,49 @@ class _HomePageState extends State<HomePage> {
           unselectedItemColor: AppColor.black,
           items: [
             BottomNavigationBarItem(
-              icon: Image.asset(AppImages.homeIcon),
+              icon: Container(
+                  height: 30,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: context.currentIndex.value == 0
+                        ? Border.all(color: AppColor.black)
+                        : null,
+                  ),
+                  child: Image.asset(AppImages.homeIcon)),
               label: 'Home',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(
-                Icons.dashboard,
-                color: AppColor.black,
+            BottomNavigationBarItem(
+              icon: Container(
+                height: 30,
+                width: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: context.currentIndex.value == 1
+                      ? Border.all(color: AppColor.black)
+                      : null,
+                ),
+                child: const Icon(
+                  Icons.dashboard,
+                  color: AppColor.black,
+                ),
               ),
               label: 'Dashboard',
             ),
-            const BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.person,
-                  color: AppColor.black,
+            BottomNavigationBarItem(
+                icon: Container(
+                  height: 30,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: context.currentIndex.value == 2
+                        ? Border.all(color: AppColor.black)
+                        : null,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    color: AppColor.black,
+                  ),
                 ),
                 label: 'Profile'),
           ],

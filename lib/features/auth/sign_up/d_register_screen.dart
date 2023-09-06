@@ -135,7 +135,9 @@ class _AddBankDetailsState extends State<AddBankDetails> {
                                   bankNameCon.text.length < 3) {
                               } else if (acountNumCon.text.isEmpty ||
                                   acountNumCon.text.length < 10) {
-                                setState(() {});
+                                Get.snackbar("Notice",
+                                    "Account Number is Invalid, it should be 10 digit",
+                                    snackPosition: SnackPosition.BOTTOM);
                               } else if (acountNameCon.text.isEmpty) {
                               } else {
                                 setState(() {
@@ -160,7 +162,7 @@ class _AddBankDetailsState extends State<AddBankDetails> {
                                         Get.off(() => const SignIn());
                                       },
                                       value:
-                                          ' "Your registration has been successfully completed, and you may now log in as a customer."',
+                                          "Your registration has been successfully completed, and you may now log in as a agent.",
                                       bottonValue: "Login");
                                 }
                               }

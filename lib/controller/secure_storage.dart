@@ -6,6 +6,7 @@ class AStorage {
   static const _keydata = "Ddata";
   static const _keyComp = "Dcomplete";
   static const _keyStatus = "401";
+  static const _keyHistory = "keyHistory";
   static const _keyOtp = "4080";
 
   static Future logALLOut() async {
@@ -49,13 +50,24 @@ class AStorage {
     return res;
   }
 
-  static Future saveDriverStatusCode(String statusCode) async {
+  static Future saveAgentProfile(String statusCode) async {
     await _secureStorage.write(key: _keyStatus, value: statusCode);
   }
 
-  static Future<String?> getDriverStatusCode() async {
+  static Future<String?> getAgentProfile() async {
     String? res = await _secureStorage.read(
       key: _keyStatus,
+    );
+    return res;
+  }
+
+  static Future saveHistory(String statusCode) async {
+    await _secureStorage.write(key: _keyHistory, value: statusCode);
+  }
+
+  static Future<String?> getHistory() async {
+    String? res = await _secureStorage.read(
+      key: _keyHistory,
     );
     return res;
   }

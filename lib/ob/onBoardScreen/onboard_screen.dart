@@ -109,7 +109,7 @@ class OnbodingWidget extends StatelessWidget {
                               style: AppTextStyle.heading2()),
                         ),
                         Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit.  ",
+                            "Share your unique referral link with dispatchers you know or anyone interested in joining Fasta.",
                             textAlign: TextAlign.center,
                             style: AppTextStyle.body()),
                         SliderWidget(
@@ -156,14 +156,14 @@ class OnboardingScreen2 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Center(
-                          child: Text('Share Your Referral Code',
+                          child: Text('Earn 2% Of Their Earnings',
                               textAlign: TextAlign.center,
                               style: AppTextStyle.heading2()),
                         ),
-                        const Text(
-                          " Lorem ipsum dolor sit amet, consectetur adipiscing elit. ",
-                          textAlign: TextAlign.center,
-                        ),
+                        Text(
+                            "For every dispatcher you refer, you'll earn a 2% commission on their earnings, for as long as they use Fasta.",
+                            textAlign: TextAlign.center,
+                            style: AppTextStyle.body()),
                         SliderWidget(
                           position: 30,
                         ),
@@ -208,12 +208,12 @@ class OnboadingWidget3 extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Center(
-                          child: Text("Share Your Referral Code",
+                          child: Text("Track Your Earnings",
                               textAlign: TextAlign.center,
                               style: AppTextStyle.heading2()),
                         ),
                         Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ',
+                            "Keep track of your earnings and referrals right from the app. Get paid effortlessly.",
                             textAlign: TextAlign.center,
                             style: AppTextStyle.body()),
                         SliderWidget(

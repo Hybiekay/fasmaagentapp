@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fastaagent/controller/profile_controler.dart';
 import 'package:fastaagent/global_widget/loading.dart';
 import 'package:flutter/material.dart';
@@ -40,13 +41,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? ninImage;
   @override
   void initState() {
-    nameCom = TextEditingController(text: "${agent?.name}");
-    emailCom = TextEditingController(text: "${agent?.email}");
-    phoneCom = TextEditingController(text: "+${agent?.phone}");
-    bankName = TextEditingController(text: "${agent?.bankName}");
-    accountName = TextEditingController(text: "${agent?.accountName}");
-    accountNumber = TextEditingController(text: "${agent?.accountNumber}");
-    ninCom = TextEditingController(text: "${agent?.nin}");
+    nameCom = TextEditingController(
+        text: agent?.name ?? "Check your Connectivity and refresh");
+    emailCom = TextEditingController(
+        text: agent?.email ?? "Check your Connectivity and refresh");
+    phoneCom = TextEditingController(
+        text: "+${agent?.phone ?? "Check your Connectivity and refresh"}");
+    bankName = TextEditingController(
+        text: agent?.bankName ?? "Check your Connectivity and refresh");
+    accountName = TextEditingController(
+        text: agent?.accountName ?? "Check your Connectivity and refresh");
+    accountNumber = TextEditingController(
+        text: agent?.accountNumber ?? "Check your Connectivity and refresh");
+    ninCom = TextEditingController(
+        text: agent?.nin ?? "Check your Connectivity and refresh");
     dropDownValue = "Weekly";
     super.initState();
   }
@@ -64,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isloading = false;
   @override
   Widget build(BuildContext context) {
+    Agent? agent = Get.put(ProfileController()).getAgentDetails;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.brandColor,
@@ -112,82 +121,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Positioned(
                           bottom: 0,
-                          left: 120,
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  Positioned(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColor.whiteColor,
-                                              width: 8),
-                                          shape: BoxShape.circle),
-                                      child: ninImage != null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: CircleAvatar(
-                                                radius: 70,
-                                                child: Image.file(ninImage!),
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              radius: 70,
-                                              child: ClipRRect(
+                          left: (MediaQuery.of(context).size.width - 160) / 2,
+                          child: SizedBox(
+                            width: 160,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: AppColor.whiteColor,
+                                                  width: 8),
+                                              shape: BoxShape.circle),
+                                          child: ninImage != null
+                                              ? ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           100),
-                                                  child: Image.network(
-                                                    "${agent!.profileImage}",
-                                                    fit: BoxFit.cover,
-                                                  )),
-                                            ),
+                                                  child: CircleAvatar(
+                                                    radius: 70,
+                                                    child:
+                                                        Image.file(ninImage!),
+                                                  ),
+                                                )
+                                              : agent == null ||
+                                                      agent.profileImage == null
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      child: const CircleAvatar(
+                                                        radius: 70,
+                                                        child: Icon(
+                                                          Icons.person,
+                                                          size: 70,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 70,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(100),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              "${agent.profileImage}",
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              const Icon(Icons
+                                                                  .android),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              const Icon(Icons
+                                                                  .android),
+                                                        ),
+                                                      ),
+                                                    )),
                                     ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    top: 10,
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        File? profileImage = await pickImage();
-                                        if (profileImage != null) {
-                                          setState(() {
-                                            ninImage = profileImage;
-                                          });
-                                          await userController.uploadProfile(
-                                              profileImage: profileImage);
-                                          Get.snackbar("Success",
-                                              "Profile Image Updated");
-                                        }
-                                      },
-                                      child: const CircleAvatar(
-                                          backgroundColor:
-                                              AppColor.mainSecondryColor,
-                                          child: Icon(
-                                            Icons.camera_alt_rounded,
-                                            color: AppColor.whiteColor,
-                                          )),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: AppColor.mainSecondryColor,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  child: Text(
-                                      agent!.isVerified ? "Active" : "Inactive",
-                                      style: AppTextStyle.capton(
-                                          color: AppColor.whiteColor,
-                                          fontWeight: FontWeight.w700)),
+                                    Positioned(
+                                      right: 0,
+                                      top: 10,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          File? profileImage =
+                                              await pickImage();
+                                          if (profileImage != null) {
+                                            setState(() {
+                                              ninImage = profileImage;
+                                            });
+                                            await userController.uploadProfile(
+                                                profileImage: profileImage);
+                                            Get.snackbar("Success",
+                                                "Profile Image Updated");
+                                            setState(() {});
+                                          }
+                                        },
+                                        child: const CircleAvatar(
+                                            backgroundColor:
+                                                AppColor.mainSecondryColor,
+                                            child: Icon(
+                                              Icons.camera_alt_rounded,
+                                              color: AppColor.whiteColor,
+                                            )),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColor.mainSecondryColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    child: Text(
+                                        agent?.isVerified ?? false
+                                            ? "Active"
+                                            : "Inactive",
+                                        style: AppTextStyle.capton(
+                                            color: AppColor.whiteColor,
+                                            fontWeight: FontWeight.w700)),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -210,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 20),
                                         height: 550,
                                         width: 300,
@@ -226,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Center(
                                                     child: Text(
                                                       "Edit Profile",
@@ -239,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Text(
                                                     "Full Name",
                                                     style: GoogleFonts.dmSans(
@@ -269,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   //     hintText:
                                                   //         "${user!.data.user.email}"),
                                                   // SizedBox(height: 10),
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Text(
                                                     "Account Number",
                                                     style: GoogleFonts.dmSans(
@@ -283,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   Formfied(
                                                       controller: accountNumber,
                                                       hintText: ""),
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Text(
                                                     "Account Name",
                                                     style: GoogleFonts.dmSans(
@@ -297,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   Formfied(
                                                       controller: accountName,
                                                       hintText: ""),
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Text(
                                                     "Bank Name",
                                                     style: GoogleFonts.dmSans(
@@ -311,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   Formfied(
                                                       controller: bankName,
                                                       hintText: ""),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 10,
                                                   ),
                                                   Align(
@@ -330,12 +373,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       ),
                                                       child:
                                                           DropdownButtonFormField(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          10),
-                                                              borderRadius: BorderRadius
-                                                                  .circular(20),
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                      20),
                                                               alignment:
                                                                   Alignment
                                                                       .center,
@@ -439,9 +483,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   //     keyboardType: TextInputType.phone,
                                                   //     controller: phoneController,
                                                   //     hintText: "${user!.data.user.phone}"),
-                                                  SizedBox(height: 10),
+                                                  const SizedBox(height: 10),
                                                   Center(
-                                                    child: Container(
+                                                    child: SizedBox(
                                                         width: 198.w,
                                                         child: ButtonComp(
                                                             bgcolor: AppColor
@@ -507,7 +551,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Text("Payment Plan",
                                 style: AppTextStyle.capton(
                                     fontWeight: FontWeight.bold)),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Container(
                               decoration: BoxDecoration(
                                 color: AppColor.gray,
@@ -535,7 +579,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ProfileForm(value: bankName.text, label: "Bank Name"),
                         SizedBox(height: 10.h),
                         ProfileForm(
@@ -547,15 +591,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProfileForm(value: ninCom.text, label: "Nin"),
                         SizedBox(
                           height: 10.h,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                          ),
-                          child: ButtonComp(
-                            onPressed: () {},
-                            value: 'Update',
-                          ),
                         ),
                       ],
                     ),

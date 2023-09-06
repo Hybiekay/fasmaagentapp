@@ -24,7 +24,7 @@ class ButtonComp extends StatelessWidget {
       child: Container(
         height: 45.h,
         decoration: BoxDecoration(
-          color: bgcolor ?? AppColor.whiteColor,
+          color: bgcolor ?? AppColor.brandColor,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Center(

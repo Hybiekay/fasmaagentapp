@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../apis/apis.dart';
 import '../apis/models/agent_history_model.dart';
-import '../apis/models/user_model.dart';
 import '../features/auth/forgetten_password/forgetten_password.dart';
 import '../features/auth/sign_in/sign_in.dart';
 import '../features/auth/sign_up/d_register_screen.dart';
@@ -25,51 +24,7 @@ class AgentController extends GetxController {
         email: email,
         password: password,
       );
-      if (data.statusCode == 400) {
-        log(data.body);
-        final res = json.decode(data.body);
-        Get.snackbar(
-            backgroundColor: AppColor.mainSecondryColor,
-            snackPosition: SnackPosition.BOTTOM,
-            "Error",
-            res["message"]);
-        if (res["message"] == "Please verify your account") {
-          Get.to(() => VerificationScreen(
-                phoneNumber: res["phone"],
-                email: email,
-                password: password,
-              ));
-        }
-      } else if (data.statusCode == 201) {
-        // log(data.body);
-        final res = json.decode(data.body);
-
-        UserModel driverResponse = UserModel.fromJson(res);
-        AStorage.saveDriverToken(driverResponse.token);
-
-        if (driverResponse.data.user.accountNumber == null ||
-            driverResponse.data.user.accountName == null ||
-            driverResponse.data.user.bankName == null) {
-          AStorage.saveDriverToken(driverResponse.token);
-
-          Get.to(() => AddBankDetails(
-                phoneNum: driverResponse.data.user.phone ?? '',
-              ));
-        } else if (driverResponse.data.user.accountNumber != null &&
-            driverResponse.data.user.accountName != null &&
-            driverResponse.data.user.bankName != null) {
-          AStorage.saveDriverToken(driverResponse.token);
-
-          await AStorage.saveDriverData(data.body);
-          Get.offAll(() => const HomePage());
-        } else {
-          Get.snackbar(
-              backgroundColor: AppColor.mainSecondryColor,
-              snackPosition: SnackPosition.BOTTOM,
-              "Error",
-              "Some Error Occured");
-        }
-      }
+      return data;
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -156,7 +111,10 @@ class AgentController extends GetxController {
     var res = await _apiController.getUserDetail();
 
     if (res.statusCode == 200) {
+      log('res ${res.body.toString()}');
+      await AStorage.saveAgentProfile(res.body.toString());
       AgentProfile agentProfile = AgentProfile.fromJson(json.decode(res.body));
+      print(agentProfile.data.agent.name);
       return agentProfile;
     }
     return null;
@@ -166,6 +124,7 @@ class AgentController extends GetxController {
     var res = await _apiController.getUserHistory();
     log(res.body);
     if (res.statusCode == 200) {
+      await AStorage.saveHistory(res.body.toString());
       AgentHistory agentProfile = AgentHistory.fromJson(json.decode(res.body));
       return agentProfile;
     }
@@ -291,6 +250,7 @@ class AgentController extends GetxController {
         paymentOption: paymentOption,
       );
       state = false;
+
       if (data.statusCode == 201) {
         final res = json.decode(data.body);
         return res;
@@ -324,7 +284,6 @@ class AgentController extends GetxController {
     required String nin,
     required File ninImage,
   }) async {
-    state = true;
     try {
       final data = await _apiController.createUser(
         password: password,
