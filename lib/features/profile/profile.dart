@@ -173,7 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       });
                 },
-                child: Text("Delete Account", style: AppTextStyle.body()),
+                child: Text("Delete Account",
+                    style: AppTextStyle.capton(color: AppColor.errorColor)),
               ),
             )
           ],
