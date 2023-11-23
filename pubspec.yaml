@@ -1,9 +1,9 @@
 name: fastaagent
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: ">=3.0.5 <4.0.0"
 dependencies:
   flutter:
     sdk: flutter
@@ -22,8 +22,10 @@ dependencies:
   intl: ^0.18.0
   timeago: ^3.5.0
   cached_network_image: ^3.2.3
-
-
+  firebase_messaging: ^14.6.9
+  firebase_core: ^2.23.0
+  upgrader: ^8.3.0
+  awesome_notifications: ^0.8.2
 
 dev_dependencies:
   flutter_test:
@@ -41,4 +43,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
- 

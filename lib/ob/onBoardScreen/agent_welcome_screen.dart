@@ -1,4 +1,6 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:fastaagent/global_widget/button_component.dart';
+import 'package:fastaagent/global_widget/dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,34 @@ import 'package:fastaagent/contants/constants.dart';
 import '../../features/auth/sign_in/sign_in.dart';
 import '../../features/auth/sign_up/sign_up.dart';
 
-class AgentWelcomeScreen extends StatelessWidget {
+class AgentWelcomeScreen extends StatefulWidget {
   const AgentWelcomeScreen({super.key});
+
+  @override
+  State<AgentWelcomeScreen> createState() => _AgentWelcomeScreenState();
+}
+
+class _AgentWelcomeScreenState extends State<AgentWelcomeScreen> {
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        mainshowDialod2(
+            bottobText1: "Don't Allow ",
+            bottobText2: " Allow ",
+            onPressed2: () => AwesomeNotifications()
+                .requestPermissionToSendNotifications()
+                .then((value) => Navigator.pop(context)),
+            context: context,
+            onPressed: () => AwesomeNotifications()
+                .requestPermissionToSendNotifications()
+                .then((value) => Navigator.pop(context)),
+            value:
+                "To use notification on this app, you need to allow the notifications press the Botton below to Allow!");
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

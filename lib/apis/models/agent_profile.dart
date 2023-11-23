@@ -171,32 +171,33 @@ class Agent {
   String? role;
   String? month;
   String? year;
+  String? fireToken;
 
-  Agent({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.state,
-    this.profileImage,
-    this.profileImageId,
-    this.otp,
-    this.otpRef,
-    required this.isVerified,
-    required this.isCompletedRegistration,
-    required this.accountNumber,
-    required this.bankName,
-    required this.accountName,
-    required this.paymentOption,
-    required this.ninImage,
-    required this.ninImageId,
-    required this.nin,
-    required this.role,
-    required this.month,
-    required this.year,
-  });
+  Agent(
+      {required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.name,
+      required this.email,
+      required this.phone,
+      required this.state,
+      this.profileImage,
+      this.profileImageId,
+      this.otp,
+      this.otpRef,
+      required this.isVerified,
+      required this.isCompletedRegistration,
+      required this.accountNumber,
+      required this.bankName,
+      required this.accountName,
+      required this.paymentOption,
+      required this.ninImage,
+      required this.ninImageId,
+      required this.nin,
+      required this.role,
+      required this.month,
+      required this.year,
+      this.fireToken});
 
   factory Agent.fromJson(Map<String?, dynamic> json) {
     return Agent(
@@ -222,6 +223,7 @@ class Agent {
       nin: json['nin'],
       role: json['role'],
       month: json['month'],
+      fireToken: json['fireToken'],
       year: json['year'],
     );
   }

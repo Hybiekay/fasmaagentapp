@@ -350,4 +350,21 @@ class AgentController extends GetxController {
       }
     }
   }
+
+  Future updateTokenDrivers(
+    String token,
+  ) async {
+    try {
+      var data = await _apiController.updateTokenDrivers(
+        token: token,
+      );
+      if (kDebugMode) {
+        print(data.statusCode);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
 }

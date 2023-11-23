@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "810380405327",
+    "firebase_url": "https://fasta-c31cf-default-rtdb.firebaseio.com",
+    "project_id": "fasta-c31cf",
+    "storage_bucket": "fasta-c31cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810380405327:android:d24b1a418067e0a1e7d83a",
+        "android_client_info": {
+          "package_name": "com.fastaagent.fastasmata"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810380405327-gmpnc0mqm00tt4epoc1hnno51ph94klt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaI7jaJLq79KiCdnqkuZDkuoep8TVKw_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810380405327-gmpnc0mqm00tt4epoc1hnno51ph94klt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810380405327:android:d354376c109e6850e7d83a",
+        "android_client_info": {
+          "package_name": "com.fastasmata.fasta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810380405327-gmpnc0mqm00tt4epoc1hnno51ph94klt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaI7jaJLq79KiCdnqkuZDkuoep8TVKw_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810380405327-gmpnc0mqm00tt4epoc1hnno51ph94klt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

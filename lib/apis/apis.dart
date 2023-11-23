@@ -225,4 +225,27 @@ class Apis extends GetxController {
 
     return result;
   }
+
+  Future updateTokenDrivers({
+    required String token,
+  }) async {
+    String? apiToken = await AStorage.getDriverToken();
+    final singnInUrl =
+        Uri.parse("${AppApis.endPoint}agent/update-firebase-token");
+    final response = await http.post(singnInUrl, headers: {
+      'Authorization': 'Bearer $apiToken',
+    }, body: {
+      "token": token,
+    });
+
+    print(response.body);
+
+    if (response.statusCode == 201) {
+      final data = json.decode(response.body);
+
+      return response;
+    } else {
+      return response;
+    }
+  }
 }
