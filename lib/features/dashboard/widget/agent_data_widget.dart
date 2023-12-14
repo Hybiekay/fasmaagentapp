@@ -37,8 +37,7 @@ class AgentData4box extends StatelessWidget {
               Row(
                 children: [
                   DashBoardBox(
-                    value:
-                        "${agentData?.totalCompletedDeliveriesCounts.length ?? 0}",
+                    value: "${agentData?.totalCompletedDeliveriesCounts[0] ?? 0}",
                     label: "Today’s Completed Deliveries",
                   ),
                   DashBoardBox(
